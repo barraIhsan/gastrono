@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
 
-import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
