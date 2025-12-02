@@ -41,11 +41,11 @@ export const createRecipeHandler = async (req, res, next) => {
 
 export const updateRecipeByIdHandler = async (req, res, next) => {
   try {
-    const response = await RecipeService.updateRecipeById(req);
+    await RecipeService.updateRecipeById(req);
 
     res.status(200).json({
       status: "success",
-      data: response,
+      message: "Recipe successfully updated",
     });
   } catch (err) {
     next(err);

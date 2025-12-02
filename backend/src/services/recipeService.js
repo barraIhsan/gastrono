@@ -30,37 +30,32 @@ export const getRecipeById = async (req) => {
 
 export const createRecipe = async (req) => {
   const validated = validate(recipeSchema, req.body);
-  const { slug, title, description, image_url } = validated;
+  const { title, description, image_url } = validated;
 
   const uuid = uuidv4();
   await pool.query(
-    `INSERT INTO recipes (id,slug,title,description,image_url,user_id)
-        VALUES (?,?,?,?,?,?)`,
-    [uuid, slug, title, description, image_url, req.user.id],
+    `INSERT INTO recipes (id,title,description,image_url,user_id)
+        VALUES (?,?,?,?,?)`,
+    [uuid, title, description, image_url, req.user.id],
   );
 
   return {
     uuid,
-    slug,
   };
 };
 
 export const updateRecipeById = async (req) => {
   const validated = validate(updateRecipeSchema, req.body);
-  const { slug, title, description, image_url } = validated;
+  const { title, description, image_url } = validated;
 
   const [rows] = await pool.query(
-    "UPDATE recipes SET slug=?, title=?, description=?, image_url=? WHERE id=? AND user_id=?",
-    [slug, title, description, image_url, req.params.id, req.user.id],
+    "UPDATE recipes SET title=?, description=?, image_url=? WHERE id=? AND user_id=?",
+    [title, description, image_url, req.params.id, req.user.id],
   );
 
   if (rows.affectedRows === 0) {
     throw new ResponseError(404, "Recipe not found");
   }
-
-  return {
-    slug,
-  };
 };
 
 export const deleteRecipeById = async (req) => {
