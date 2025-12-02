@@ -5,6 +5,7 @@ import { errorMiddleware } from "./middleware/errorMiddleware.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/authRoute.js";
 import userRouter from "./routes/userRoute.js";
+import recipeRouter from "./routes/recipeRoute.js";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(cookieParser());
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
+app.use("/recipes", recipeRouter);
 
 app.use(errorMiddleware);
 
