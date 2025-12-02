@@ -5,7 +5,6 @@ import validate from "../validation/validate.js";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
-import { getUser } from "../util/user.js";
 
 const getUser = async (username) => {
   const [rows] = await pool.query(
