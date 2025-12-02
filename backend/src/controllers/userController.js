@@ -41,7 +41,7 @@ export const createUserHandler = async (req, res, next) => {
 
 export const updateUserByIdHandler = async (req, res, next) => {
   try {
-    await UserService.updateUserById(id, req);
+    await UserService.updateUserById(req);
 
     res.status(200).json({
       status: "success",

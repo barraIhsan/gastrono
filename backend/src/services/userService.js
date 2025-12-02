@@ -57,7 +57,7 @@ export const updateUserById = async (req) => {
   const validated = validate(updateUserSchema, req.body);
   const { username, password } = validated;
 
-  if (!(req.user.role === "admin" || id === req.user.id)) {
+  if (!(req.user.role === "admin" || req.params.id === req.user.id)) {
     throw new ResponseError(401, "Unauthorized");
   }
 
