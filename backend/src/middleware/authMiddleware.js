@@ -3,10 +3,13 @@ import { ResponseError } from "../errors/responseError.js";
 
 export const authenticateToken = (req, _res, next) => {
   const authHeader = req.headers["authorization"];
-  const [scheme, token] = authHeader && authHeader.split(" ");
+  if (!authHeader) {
+    throw new ResponseError(401, "Missing Authorization header");
+  }
 
-  if (scheme !== "Bearer " || !token) {
-    throw new ResponseError(401, "Missing or invalid Authorization header");
+  const [scheme, token] = authHeader && authHeader.split(" ");
+  if (scheme !== "Bearer" || !token) {
+    throw new ResponseError(401, "Invalid Authorization header");
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
