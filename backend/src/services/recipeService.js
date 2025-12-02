@@ -8,16 +8,17 @@ import {
 import validate from "../validation/validate.js";
 
 export const getAllRecipe = async (req) => {
-  const [rows] = await pool.query("SELECT * FROM recipes WHERE user_id=?", [
-    req.user.id,
-  ]);
+  const [rows] = await pool.query(
+    "SELECT id,title,description,image_url,created_at FROM recipes WHERE user_id=?",
+    [req.user.id],
+  );
 
   return rows;
 };
 
 export const getRecipeById = async (req) => {
   const [rows] = await pool.query(
-    "SELECT * FROM recipes WHERE id = ? AND user_id=?",
+    "SELECT id,title,description,image_url,created_at FROM recipes WHERE id = ? AND user_id=?",
     [req.params.id, req.user.id],
   );
 
