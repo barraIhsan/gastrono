@@ -1,10 +1,11 @@
 import { pool } from "../config/db.js";
 import { ResponseError } from "../errors/responseError.js";
-import { userSchema } from "../validation/authValidation.js";
+import { userSchema } from "../validation/userValidation.js";
 import validate from "../validation/validate.js";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
+import { getUser } from "../util/user.js";
 
 const getUser = async (username) => {
   const [rows] = await pool.query(
@@ -15,7 +16,7 @@ const getUser = async (username) => {
 };
 
 export const register = async (req) => {
-  const validated = validate(userSchema, req);
+  const validated = validate(userSchema, req.body);
   const { username, password } = validated;
 
   const usernameExists = await getUser(username);
@@ -24,15 +25,16 @@ export const register = async (req) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
+  const uuid = uuidv4();
 
   await pool.query(
     "INSERT INTO users (id, username, password) VALUES (?,?,?)",
-    [uuidv4(), username, hashedPassword],
+    [uuid, username, hashedPassword],
   );
 };
 
 export const login = async (req) => {
-  const { username, password } = validate(userSchema, req);
+  const { username, password } = validate(userSchema, req.body);
 
   const user = await getUser(username);
   if (!user) {
@@ -44,8 +46,8 @@ export const login = async (req) => {
     throw new ResponseError(401, "Username or password is incorrect");
   }
 
-  const payload = { id: user.id, username: user.username };
-  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "15m" });
+  const payload = { id: user.id, username: user.username, role: user.role };
+  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "2h" });
 
   return {
     token,

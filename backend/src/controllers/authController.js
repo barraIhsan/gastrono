@@ -2,7 +2,7 @@ import * as AuthService from "../services/authService.js";
 
 export const registerHandler = async (req, res, next) => {
   try {
-    await AuthService.register(req.body);
+    await AuthService.register(req);
 
     res.status(201).json({
       status: "success",
@@ -15,7 +15,7 @@ export const registerHandler = async (req, res, next) => {
 
 export const loginHandler = async (req, res, next) => {
   try {
-    const response = await AuthService.login(req.body);
+    const response = await AuthService.login(req);
 
     res.status(200).json({
       status: "success",
@@ -28,7 +28,7 @@ export const loginHandler = async (req, res, next) => {
 
 export const refreshHandler = async (req, res, next) => {
   try {
-    const response = await AuthService.refresh(req.body);
+    const response = await AuthService.refresh(req);
 
     res.status(200).json({
       status: "success",
