@@ -13,6 +13,19 @@ export const getAllUserHandler = async (req, res, next) => {
   }
 };
 
+export const getCurrentUserHandler = async (req, res, next) => {
+  try {
+    const response = await UserService.getCurrentUser(req);
+
+    res.status(200).json({
+      status: "success",
+      data: response,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const getUserByIdHandler = async (req, res, next) => {
   try {
     const response = await UserService.getUserById(req);

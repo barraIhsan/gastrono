@@ -25,6 +25,14 @@ export const getAllUser = async (req) => {
   return rows;
 };
 
+export const getCurrentUser = async (req) => {
+  const [rows] = await pool.query("SELECT id,username FROM users WHERE id=?", [
+    req.user.id,
+  ]);
+
+  return rows;
+};
+
 export const getUserById = async (req) => {
   if (!(req.params.id === req.user.id || req.user.role === "admin")) {
     throw new ResponseError(401, "Unauthorized");
