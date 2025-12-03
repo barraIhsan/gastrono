@@ -4,6 +4,14 @@ import { ResponseError } from "../errors/responseError.js";
 import { ingredientSchema } from "../validation/ingredientValidation.js";
 import validate from "../validation/validate.js";
 
+const getIngredientByName = async (name, req) => {
+  const [rows] = await pool.query(
+    "SELECT * FROM ingredients WHERE name = ? AND user_id=? LIMIT 1",
+    [name, req.user.id],
+  );
+  return rows[0] || null;
+};
+
 export const getAllIngredient = async (req) => {
   const [rows] = await pool.query(
     "SELECT id,name FROM ingredients WHERE user_id=?",
@@ -30,6 +38,11 @@ export const createIngredient = async (req) => {
   const validated = validate(ingredientSchema, req.body);
   const { name } = validated;
 
+  const ingredient = await getIngredientByName(name, req);
+  if (ingredient) {
+    throw new ResponseError(400, "Ingredient with that name already exists");
+  }
+
   const uuid = uuidv4();
   await pool.query(
     `INSERT INTO ingredients (id,name,user_id)
@@ -45,6 +58,11 @@ export const createIngredient = async (req) => {
 export const updateIngredientById = async (req) => {
   const validated = validate(ingredientSchema, req.body);
   const { name } = validated;
+
+  const ingredients = await getIngredientByName(name, req);
+  if (ingredients && ingredients.id !== req.params.id) {
+    throw new ResponseError(400, "Ingredient with that name already exists");
+  }
 
   const [rows] = await pool.query(
     "UPDATE ingredients SET name=? WHERE id=? AND user_id=?",
