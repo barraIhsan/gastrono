@@ -56,11 +56,6 @@ export const createUser = async (req) => {
   const validated = validate(userSchema, req.body);
   const { username, password } = validated;
 
-  const user = await getUserByUsername(username);
-  if (user) {
-    throw new ResponseError(400, "User with that username already exists");
-  }
-
   const hashedPassword = await bcrypt.hash(password, 10);
   const uuid = uuidv4();
 
@@ -80,11 +75,6 @@ export const updateUserById = async (req) => {
 
   if (!(req.user.role === "admin" || req.params.id === req.user.id)) {
     throw new ResponseError(401, "Unauthorized");
-  }
-
-  const user = await getUserByUsername(username);
-  if (user && user.id !== req.params.id) {
-    throw new ResponseError(400, "User with that username already exists");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
