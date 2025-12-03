@@ -28,7 +28,7 @@ export const loginHandler = async (req, res, next) => {
 
 export const refreshHandler = async (req, res, next) => {
   try {
-    const response = await AuthService.refresh(req);
+    const response = await AuthService.refresh(req, res);
 
     res.status(200).json({
       status: "success",
