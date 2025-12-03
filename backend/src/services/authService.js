@@ -1,41 +1,18 @@
-import { pool } from "../config/db.js";
 import { ResponseError } from "../errors/responseError.js";
 import { userSchema } from "../validation/userValidation.js";
 import validate from "../validation/validate.js";
 import bcrypt from "bcrypt";
-import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
-
-const getUser = async (username) => {
-  const [rows] = await pool.query(
-    "SELECT * FROM users WHERE username = ? LIMIT 1",
-    [username],
-  );
-  return rows[0] || null;
-};
+import { createUser, getUserByUsername } from "./userService.js";
 
 export const register = async (req) => {
-  const validated = validate(userSchema, req.body);
-  const { username, password } = validated;
-
-  const usernameExists = await getUser(username);
-  if (usernameExists) {
-    throw new ResponseError(401, "Username already exists");
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const uuid = uuidv4();
-
-  await pool.query(
-    "INSERT INTO users (id, username, password) VALUES (?,?,?)",
-    [uuid, username, hashedPassword],
-  );
+  await createUser(req);
 };
 
 export const login = async (req) => {
   const { username, password } = validate(userSchema, req.body);
 
-  const user = await getUser(username);
+  const user = await getUserByUsername(username);
   if (!user) {
     throw new ResponseError(401, "Username or password is incorrect");
   }

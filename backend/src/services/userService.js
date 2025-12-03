@@ -5,6 +5,14 @@ import { userSchema } from "../validation/userValidation.js";
 import validate from "../validation/validate.js";
 import bcrypt from "bcrypt";
 
+export const getUserByUsername = async (username) => {
+  const [rows] = await pool.query(
+    "SELECT * FROM users WHERE username = ? LIMIT 1",
+    [username],
+  );
+  return rows[0] || null;
+};
+
 export const getAllUser = async (req) => {
   if (req.user.role !== "admin") {
     throw new ResponseError(401, "Unauthorized");
@@ -40,6 +48,11 @@ export const createUser = async (req) => {
   const validated = validate(userSchema, req.body);
   const { username, password } = validated;
 
+  const user = await getUserByUsername(username);
+  if (user) {
+    throw new ResponseError(400, "User with that username already exists");
+  }
+
   const hashedPassword = await bcrypt.hash(password, 10);
   const uuid = uuidv4();
 
@@ -59,6 +72,11 @@ export const updateUserById = async (req) => {
 
   if (!(req.user.role === "admin" || req.params.id === req.user.id)) {
     throw new ResponseError(401, "Unauthorized");
+  }
+
+  const user = await getUserByUsername(username);
+  if (user && user.id !== req.params.id) {
+    throw new ResponseError(400, "User with that username already exists");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
