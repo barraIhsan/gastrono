@@ -13,12 +13,10 @@ export const login = async (req) => {
   const { username, password } = validate(userSchema, req.body);
 
   const user = await getUserByUsername(username);
-  if (!user) {
-    throw new ResponseError(401, "Username or password is incorrect");
-  }
+  const targetHash = user ? user.password : process.env.DUMMY_HASH;
+  const passwordMatch = await bcrypt.compare(password, targetHash);
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
+  if (!user || !passwordMatch) {
     throw new ResponseError(401, "Username or password is incorrect");
   }
 
