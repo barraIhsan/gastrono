@@ -24,6 +24,7 @@ export const login = async (req) => {
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "2h" });
 
   return {
+    id: user.id,
     token,
   };
 };
