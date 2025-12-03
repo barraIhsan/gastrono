@@ -7,6 +7,7 @@ import authRouter from "./routes/authRoute.js";
 import userRouter from "./routes/userRoute.js";
 import recipeRouter from "./routes/recipeRoute.js";
 import ingredientRouter from "./routes/ingredientRoute.js";
+import uploadRoute from "./routes/uploadRoute.js";
 
 dotenv.config();
 
@@ -16,8 +17,10 @@ const port = process.env.PORT;
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+app.use("/uploads", express.static("uploads"));
 
 app.use("/auth", authRouter);
+app.use("/upload", uploadRoute);
 app.use("/users", userRouter);
 app.use("/recipes", recipeRouter);
 app.use("/ingredients", ingredientRouter);
