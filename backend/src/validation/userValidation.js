@@ -4,6 +4,7 @@ export const userSchema = z
   .object({
     username: z
       .string("Username must be a string")
+      .regex(/^\S+$/, "Username tidak boleh mengandung spasi")
       .min(3, "Username must contain more than 3 characters")
       .max(32, "Username must not contain more than 32 characters"),
     password: z
