@@ -61,9 +61,10 @@ export const updateUserById = async (req) => {
     throw new ResponseError(401, "Unauthorized");
   }
 
+  const hashedPassword = await bcrypt.hash(password, 10);
   const [rows] = await pool.query(
     "UPDATE users SET username=?, password=? WHERE id=?",
-    [username, password, req.params.id],
+    [username, hashedPassword, req.params.id],
   );
 
   if (rows.affectedRows === 0) {
