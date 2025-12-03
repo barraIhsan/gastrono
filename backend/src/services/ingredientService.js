@@ -1,10 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { pool } from "../config/db.js";
 import { ResponseError } from "../errors/responseError.js";
-import {
-  ingredientSchema,
-  updateIngredientSchema,
-} from "../validation/ingredientValidation.js";
+import { ingredientSchema } from "../validation/ingredientValidation.js";
 import validate from "../validation/validate.js";
 
 export const getAllIngredient = async (req) => {
@@ -46,7 +43,7 @@ export const createIngredient = async (req) => {
 };
 
 export const updateIngredientById = async (req) => {
-  const validated = validate(updateIngredientSchema, req.body);
+  const validated = validate(ingredientSchema, req.body);
   const { name } = validated;
 
   const [rows] = await pool.query(

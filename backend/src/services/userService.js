@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { pool } from "../config/db.js";
 import { ResponseError } from "../errors/responseError.js";
-import { updateUserSchema, userSchema } from "../validation/userValidation.js";
+import { userSchema } from "../validation/userValidation.js";
 import validate from "../validation/validate.js";
 import bcrypt from "bcrypt";
 
@@ -54,7 +54,7 @@ export const createUser = async (req) => {
 };
 
 export const updateUserById = async (req) => {
-  const validated = validate(updateUserSchema, req.body);
+  const validated = validate(userSchema, req.body);
   const { username, password } = validated;
 
   if (!(req.user.role === "admin" || req.params.id === req.user.id)) {

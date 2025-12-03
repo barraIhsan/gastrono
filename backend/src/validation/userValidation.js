@@ -10,5 +10,3 @@ export const userSchema = z.object({
     .min(6, "Password must contain more than 6 characters")
     .max(64, "Password must not contain more than 64 characters"),
 });
-
-export const updateUserSchema = userSchema.partial();
