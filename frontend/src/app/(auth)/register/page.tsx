@@ -30,11 +30,13 @@ import Link from "next/link";
 import { register } from "@/lib/api/auth";
 import { registerSchema } from "@/lib/schema/auth";
 import { toast } from "sonner";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const router = useRouter();
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -45,16 +47,20 @@ export default function Register() {
   });
 
   const onSubmit = async (data: z.infer<typeof registerSchema>) => {
-    const res = await register(data);
-    if (res.status === 201) {
+    try {
+      await register(data);
       toast.success("Register success. Redirecting you to login page", {
         duration: 2000,
       });
-      redirect("/login");
-    } else if (res.status === 400) {
-      toast.error("Username already exists");
-    } else {
-      toast.error("An error occured");
+      router.replace("/login");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 400) {
+          toast.error("Username already exists");
+        } else {
+          toast.error("An error occured");
+        }
+      }
     }
   };
 

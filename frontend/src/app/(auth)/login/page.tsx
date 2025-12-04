@@ -30,10 +30,13 @@ import Link from "next/link";
 import { login } from "@/lib/api/auth";
 import { loginSchema } from "@/lib/schema/auth";
 import { toast } from "sonner";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { useAuthStore } from "@/lib/store/auth";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -43,16 +46,23 @@ export default function Login() {
   });
 
   const onSubmit = async (data: z.infer<typeof loginSchema>) => {
-    const res = await login(data);
-    if (res.status === 200) {
+    try {
+      const res = await login(data);
+      const accessToken = res.data.data.accessToken;
+      useAuthStore.getState().setToken(accessToken);
+
       toast.success("Login success. Redirecting you to homepage", {
         duration: 2000,
       });
-      redirect("/");
-    } else if (res.status === 401) {
-      toast.error(res.data.message);
-    } else {
-      toast.error("An error occured");
+      router.replace("/");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 401) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error("An error occured");
+        }
+      }
     }
   };
 
