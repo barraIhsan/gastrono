@@ -2,6 +2,7 @@
 import { useAuthStore } from "@/lib/store/auth";
 import NotLoggedIn from "./NotLoggedIn";
 import { Separator } from "@/components/ui/separator";
+import ListRecipe from "@/components/ListRecipe";
 import { Button } from "@/components/ui/button";
 import { SquarePen } from "lucide-react";
 import Link from "next/link";
@@ -29,6 +30,8 @@ export default function Main() {
           </div>
         </section>
         <Separator className="mt-20 mb-10" />
+        <ListRecipe />
+        <div className="h-500"></div>
       </>
     );
   }

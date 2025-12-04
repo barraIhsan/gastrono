@@ -30,5 +30,5 @@ export const recipeSchema = z.object({
 });
 
 export const recipeApiSchema = recipeSchema.omit({ image: true }).extend({
-  image_url: z.string().max(100),
+  image_url: z.string(),
 });
