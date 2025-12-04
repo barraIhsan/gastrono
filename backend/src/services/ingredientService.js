@@ -63,6 +63,6 @@ export const deleteIngredientById = async (req) => {
   );
 
   if (rows.affectedRows == 0) {
-    throw new ResponseError(400, "Ingredient not found");
+    throw new ResponseError(404, "Ingredient not found");
   }
 };

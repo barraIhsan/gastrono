@@ -63,6 +63,6 @@ export const deleteRecipeById = async (req) => {
   );
 
   if (rows.affectedRows == 0) {
-    throw new ResponseError(400, "Recipe not found");
+    throw new ResponseError(404, "Recipe not found");
   }
 };
