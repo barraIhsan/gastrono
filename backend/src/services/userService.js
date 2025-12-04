@@ -15,7 +15,7 @@ export const getUserByUsername = async (username) => {
 
 export const getAllUser = async (req) => {
   if (req.user.role !== "admin") {
-    throw new ResponseError(401, "Unauthorized");
+    throw new ResponseError(403, "Unauthorized");
   }
 
   const [rows] = await pool.query(
@@ -35,7 +35,7 @@ export const getCurrentUser = async (req) => {
 
 export const getUserById = async (req) => {
   if (!(req.params.id === req.user.id || req.user.role === "admin")) {
-    throw new ResponseError(401, "Unauthorized");
+    throw new ResponseError(403, "Unauthorized");
   }
 
   const [rows] = await pool.query("SELECT * FROM users WHERE id = ? LIMIT 1", [
@@ -74,7 +74,7 @@ export const updateUserById = async (req) => {
   const { username, password } = validated;
 
   if (!(req.user.role === "admin" || req.params.id === req.user.id)) {
-    throw new ResponseError(401, "Unauthorized");
+    throw new ResponseError(403, "Unauthorized");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -90,7 +90,7 @@ export const updateUserById = async (req) => {
 
 export const deleteUserById = async (req) => {
   if (!(req.user.role === "admin" || req.params.id === req.user.id)) {
-    throw new ResponseError(401, "Unauthorized");
+    throw new ResponseError(403, "Unauthorized");
   }
 
   const [rows] = await pool.query("DELETE FROM users WHERE id=?", [
@@ -98,6 +98,6 @@ export const deleteUserById = async (req) => {
   ]);
 
   if (rows.affectedRows == 0) {
-    throw new ResponseError(400, "User not found");
+    throw new ResponseError(404, "User not found");
   }
 };
