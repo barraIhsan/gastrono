@@ -39,7 +39,7 @@ export const login = async (req, res) => {
   });
 
   return {
-    id: user.id,
+    username: user.username,
     accessToken,
   };
 };
