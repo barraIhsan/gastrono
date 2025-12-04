@@ -38,8 +38,8 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="container mx-auto fixed top-0 inset-x-0">
-      <div className="flex justify-between items-center px-5 py-5 h-20">
+    <nav className="fixed top-0 inset-x-0 bg-background/80 backdrop-blur-md z-10">
+      <div className="container mx-auto flex justify-between items-center px-5 py-5 h-20">
         <Link href="/" className="text-2xl font-bold">
           Gastrono
         </Link>
