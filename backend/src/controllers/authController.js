@@ -26,6 +26,19 @@ export const loginHandler = async (req, res, next) => {
   }
 };
 
+export const logoutHandler = async (_req, res, next) => {
+  try {
+    await AuthService.logout(res);
+
+    res.status(200).json({
+      status: "success",
+      message: "Logged out",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const refreshHandler = async (req, res, next) => {
   try {
     const response = await AuthService.refresh(req, res);

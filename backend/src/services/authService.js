@@ -44,6 +44,16 @@ export const login = async (req, res) => {
   };
 };
 
+export const logout = async (res) => {
+  // clear cookie
+  res.cookie("refreshToken", "", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    maxAge: 0,
+  });
+};
+
 export const refresh = async (req, res) => {
   const token = req.cookies?.refreshToken;
 
