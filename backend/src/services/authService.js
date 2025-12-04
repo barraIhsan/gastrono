@@ -51,32 +51,33 @@ export const refresh = async (req, res) => {
     throw new ResponseError(401, "Refresh token is missing");
   }
 
-  jwt.verify(token, process.env.REFRESH_SECRET, async (err, decoded) => {
-    if (err) {
-      throw new ResponseError(403, "Invalid or expired refresh token");
-    }
+  let decoded;
+  try {
+    decoded = jwt.verify(token, process.env.REFRESH_SECRET);
+  } catch (err) {
+    throw new ResponseError(403, "Invalid or expired refresh token");
+  }
 
-    // generate new token
-    const payload = {
-      id: decoded.id,
-      username: decoded.username,
-      role: decoded.role,
-    };
+  // generate new token
+  const payload = {
+    id: decoded.id,
+    username: decoded.username,
+    role: decoded.role,
+  };
 
-    const newAccessToken = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "15m",
-    });
-    const newRefreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, {
-      expiresIn: "7d",
-    });
+  const newAccessToken = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: "15m",
+  });
+  const newRefreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, {
+    expiresIn: "7d",
+  });
 
-    // set cookie
-    res.cookie("refreshToken", newRefreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+  // set cookie
+  res.cookie("refreshToken", newRefreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
   return {
