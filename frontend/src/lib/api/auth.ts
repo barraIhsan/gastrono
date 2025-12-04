@@ -6,6 +6,10 @@ export const login = async (data: z.infer<typeof loginSchema>) => {
   return await api.post("/auth/login", data);
 };
 
+export const logout = async () => {
+  return await api.post("/auth/logout");
+};
+
 export const register = async (data: z.infer<typeof registerSchema>) => {
   const { username, password } = data;
   return await api.post("/auth/register", { username, password });

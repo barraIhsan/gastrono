@@ -33,6 +33,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useAuthStore } from "@/lib/store/auth";
+import Navbar from "@/components/Navbar";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -67,86 +68,89 @@ export default function Login() {
   };
 
   return (
-    <section className="container mx-auto flex justify-center items-center min-h-screen">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-xl">Login</CardTitle>
-          <CardDescription>Enter your credentials below</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form id="form-login" onSubmit={form.handleSubmit(onSubmit)}>
-            <FieldGroup>
-              <Controller
-                name="username"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field>
-                    <FieldLabel>Username</FieldLabel>
-                    <Input
-                      {...field}
-                      id={field.name}
-                      aria-invalid={fieldState.invalid}
-                      autoComplete="off"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                name="password"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field>
-                    <FieldLabel>Password</FieldLabel>
-                    <InputGroup>
-                      <InputGroupInput
+    <>
+      <Navbar />
+      <section className="container mx-auto flex justify-center items-center min-h-screen">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle className="text-xl">Login</CardTitle>
+            <CardDescription>Enter your credentials below</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form id="form-login" onSubmit={form.handleSubmit(onSubmit)}>
+              <FieldGroup>
+                <Controller
+                  name="username"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel>Username</FieldLabel>
+                      <Input
                         {...field}
-                        type={showPassword ? "text" : "password"}
                         id={field.name}
                         aria-invalid={fieldState.invalid}
                         autoComplete="off"
                       />
-                      <InputGroupAddon align="inline-end">
-                        <InputGroupButton
-                          aria-label="Show/Hide Password"
-                          title="Show/Hide Password"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? (
-                            <EyeClosed className="size-4" />
-                          ) : (
-                            <Eye className="size-4" />
-                          )}
-                        </InputGroupButton>
-                      </InputGroupAddon>
-                    </InputGroup>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-            </FieldGroup>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-3">
-          <Button
-            type="submit"
-            className="w-full cursor-pointer"
-            form="form-login"
-          >
-            Login
-          </Button>
-          <p className="text-sm text-muted-foreground">
-            Not registered?{" "}
-            <Link href="/register" className="underline">
-              Register
-            </Link>
-          </p>
-        </CardFooter>
-      </Card>
-    </section>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="password"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel>Password</FieldLabel>
+                      <InputGroup>
+                        <InputGroupInput
+                          {...field}
+                          type={showPassword ? "text" : "password"}
+                          id={field.name}
+                          aria-invalid={fieldState.invalid}
+                          autoComplete="off"
+                        />
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupButton
+                            aria-label="Show/Hide Password"
+                            title="Show/Hide Password"
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {showPassword ? (
+                              <EyeClosed className="size-4" />
+                            ) : (
+                              <Eye className="size-4" />
+                            )}
+                          </InputGroupButton>
+                        </InputGroupAddon>
+                      </InputGroup>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </FieldGroup>
+            </form>
+          </CardContent>
+          <CardFooter className="flex-col gap-3">
+            <Button
+              type="submit"
+              className="w-full cursor-pointer"
+              form="form-login"
+            >
+              Login
+            </Button>
+            <p className="text-sm text-muted-foreground">
+              Not registered?{" "}
+              <Link href="/register" className="underline">
+                Register
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
+      </section>
+    </>
   );
 }
