@@ -21,7 +21,7 @@ export const login = async (req, res) => {
   }
 
   // generate token
-  const payload = { sub: user.id, username: user.username, role: user.role };
+  const payload = { id: user.id, username: user.username, role: user.role };
 
   const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: "15m",
@@ -58,7 +58,7 @@ export const refresh = async (req, res) => {
 
     // generate new token
     const payload = {
-      sub: decoded.sub,
+      id: decoded.id,
       username: decoded.username,
       role: decoded.role,
     };
@@ -66,7 +66,7 @@ export const refresh = async (req, res) => {
     const newAccessToken = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "15m",
     });
-    const newRefreshToken = jwt.sign(payload, process.env.JWT_SECRET, {
+    const newRefreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, {
       expiresIn: "7d",
     });
 

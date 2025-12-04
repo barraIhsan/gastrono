@@ -30,7 +30,7 @@ export const getCurrentUser = async (req) => {
     req.user.id,
   ]);
 
-  return rows;
+  return rows[0];
 };
 
 export const getUserById = async (req) => {
