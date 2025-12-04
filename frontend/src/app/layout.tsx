@@ -36,7 +36,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Navbar />
-          {children}
+          <main className="container mx-auto mt-30 px-5">{children}</main>
         </ThemeProvider>
         <Toaster />
       </body>
