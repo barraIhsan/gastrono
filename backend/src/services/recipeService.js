@@ -6,7 +6,7 @@ import validate from "../validation/validate.js";
 
 export const getAllRecipe = async (req) => {
   const [rows] = await pool.query(
-    "SELECT id,title,description,image_url,created_at FROM recipes WHERE user_id=?",
+    "SELECT id,title,image_url,created_at FROM recipes WHERE user_id=?",
     [req.user.id],
   );
 
