@@ -1,7 +1,7 @@
 "use client";
 import { currentUser } from "@/lib/api/user";
 import { ChevronDown, LogIn, LogOut } from "lucide-react";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect } from "react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 import { Button } from "./ui/button";
 import { logout } from "@/lib/api/auth";
@@ -10,7 +10,8 @@ import { useAuthStore } from "@/lib/store/auth";
 import { toast } from "sonner";
 
 export default function Navbar() {
-  const [loading, setLoading] = useState<boolean>(true);
+  const loading = useAuthStore((state) => state.loading);
+  const setLoading = useAuthStore((state) => state.setLoading);
   const username = useAuthStore((state) => state.username);
   const setUsername = useAuthStore((state) => state.setUsername);
 
@@ -27,7 +28,7 @@ export default function Navbar() {
     };
 
     fetchUser();
-  }, [setUsername]);
+  }, [setLoading, setUsername]);
 
   const handleLogout = async () => {
     await logout();

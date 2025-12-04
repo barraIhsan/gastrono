@@ -37,7 +37,8 @@ import { currentUser } from "@/lib/api/user";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  const loading = useAuthStore((state) => state.loading);
+  const setLoading = useAuthStore((state) => state.setLoading);
   const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
