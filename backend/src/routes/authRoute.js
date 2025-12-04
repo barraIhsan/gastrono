@@ -8,6 +8,6 @@ import {
 const authRouter = express.Router();
 authRouter.post("/register", registerHandler);
 authRouter.post("/login", loginHandler);
-// authRouter.post("/refresh", refreshHandler);
+authRouter.post("/refresh", refreshHandler);
 
 export default authRouter;
