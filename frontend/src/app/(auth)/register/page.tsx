@@ -83,12 +83,12 @@ export default function Register() {
     };
 
     checkAuth();
-  }, [router]);
+  }, [router, setLoading]);
 
   if (loading) return null;
 
   return (
-    <section className="container mx-auto flex justify-center items-center min-h-screen">
+    <section className="flex justify-center items-center min-h-screen -mt-30">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-xl">Register</CardTitle>
