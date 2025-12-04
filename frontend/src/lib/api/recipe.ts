@@ -6,3 +6,8 @@ export const createRecipe = async (data: z.infer<typeof recipeApiSchema>) =>
   (await api.post("/recipes", data)).data;
 
 export const getAllRecipes = async () => (await api.get("/recipes")).data;
+export const getRecipe = async (id: string) =>
+  (await api.get("/recipes/" + id)).data;
+
+export const deleteRecipe = async (id: string) =>
+  (await api.delete("/recipes/" + id)).data;
