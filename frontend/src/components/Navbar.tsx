@@ -1,51 +1,52 @@
+"use client";
 import { currentUser } from "@/lib/api/user";
 import { ChevronDown, LogIn, LogOut } from "lucide-react";
 import { useLayoutEffect, useState } from "react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 import { Button } from "./ui/button";
 import { logout } from "@/lib/api/auth";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuthStore } from "@/lib/store/auth";
+import { toast } from "sonner";
 
 export default function Navbar() {
-  const [user, setUser] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-  const router = useRouter();
+  const username = useAuthStore((state) => state.username);
+  const setUsername = useAuthStore((state) => state.setUsername);
 
   useLayoutEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await currentUser();
-        console.log(res);
-        setUser(res.data.data.username);
+        setUsername(res.data.username);
       } catch {
-        setUser("");
+        setUsername("");
       } finally {
         setLoading(false);
       }
     };
 
     fetchUser();
-  }, []);
+  }, [setUsername]);
 
   const handleLogout = async () => {
     await logout();
     useAuthStore.getState().clearToken();
-    setUser("");
+    setUsername("");
+    toast.success("Logged out");
   };
 
   return (
     <nav className="container mx-auto fixed top-0 inset-x-0">
-      <div className="flex justify-between items-center px-5 py-5">
+      <div className="flex justify-between items-center px-5 py-5 h-20">
         <Link href="/" className="text-2xl font-bold">
           Gastrono
         </Link>
         {!loading &&
-          (user ? (
-            <HoverCard openDelay={0} closeDelay={0}>
+          (username ? (
+            <HoverCard openDelay={0}>
               <HoverCardTrigger className="flex items-center gap-3 cursor-pointer px-3 py-1.5">
-                <p>{user}</p>
+                <p>{username}</p>
                 <ChevronDown size={16} className="text-muted-foreground" />
               </HoverCardTrigger>
               <HoverCardContent className="size-fit">

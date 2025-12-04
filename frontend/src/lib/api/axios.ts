@@ -26,7 +26,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const result = await refresh();
-        const newToken = result.data.data.accessToken;
+        const newToken = result.data.accessToken;
         useAuthStore.getState().setToken(newToken);
 
         originalRequest.headers.Authorization = `Bearer ${newToken}`;

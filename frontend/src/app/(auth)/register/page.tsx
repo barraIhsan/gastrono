@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeClosed } from "lucide-react";
 import z from "zod";
 import { Controller, useForm } from "react-hook-form";
@@ -32,11 +32,13 @@ import { registerSchema } from "@/lib/schema/auth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import Navbar from "@/components/Navbar";
+import { currentUser } from "@/lib/api/user";
 
 export default function Register() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -65,126 +67,141 @@ export default function Register() {
     }
   };
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await currentUser();
+        router.replace("/");
+        toast.info("Already logged in as user " + res.data.username);
+      } catch {
+        // user not logged in, do nothing
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
+  if (loading) return null;
+
   return (
-    <>
-      <Navbar />
-      <section className="container mx-auto flex justify-center items-center min-h-screen">
-        <Card className="w-full max-w-sm">
-          <CardHeader>
-            <CardTitle className="text-xl">Register</CardTitle>
-            <CardDescription>Enter your credentials below</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form id="form-register" onSubmit={form.handleSubmit(onSubmit)}>
-              <FieldGroup>
-                <Controller
-                  name="username"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field>
-                      <FieldLabel>Username</FieldLabel>
-                      <Input
+    <section className="container mx-auto flex justify-center items-center min-h-screen">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-xl">Register</CardTitle>
+          <CardDescription>Enter your credentials below</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form id="form-register" onSubmit={form.handleSubmit(onSubmit)}>
+            <FieldGroup>
+              <Controller
+                name="username"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel>Username</FieldLabel>
+                    <Input
+                      {...field}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      autoComplete="off"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="password"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel>Password</FieldLabel>
+                    <InputGroup>
+                      <InputGroupInput
                         {...field}
+                        type={showPassword ? "text" : "password"}
                         id={field.name}
                         aria-invalid={fieldState.invalid}
                         autoComplete="off"
                       />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="password"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field>
-                      <FieldLabel>Password</FieldLabel>
-                      <InputGroup>
-                        <InputGroupInput
-                          {...field}
-                          type={showPassword ? "text" : "password"}
-                          id={field.name}
-                          aria-invalid={fieldState.invalid}
-                          autoComplete="off"
-                        />
-                        <InputGroupAddon align="inline-end">
-                          <InputGroupButton
-                            aria-label="Show/Hide Password"
-                            title="Show/Hide Password"
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
-                            {showPassword ? (
-                              <EyeClosed className="size-4" />
-                            ) : (
-                              <Eye className="size-4" />
-                            )}
-                          </InputGroupButton>
-                        </InputGroupAddon>
-                      </InputGroup>
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="confirmPassword"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field>
-                      <FieldLabel>Confirm Password</FieldLabel>
-                      <InputGroup>
-                        <InputGroupInput
-                          {...field}
-                          type={showConfirmPassword ? "text" : "password"}
-                          id={field.name}
-                          aria-invalid={fieldState.invalid}
-                          autoComplete="off"
-                        />
-                        <InputGroupAddon align="inline-end">
-                          <InputGroupButton
-                            aria-label="Show/Hide Password"
-                            title="Show/Hide Password"
-                            onClick={() =>
-                              setShowConfirmPassword(!showConfirmPassword)
-                            }
-                          >
-                            {showConfirmPassword ? (
-                              <EyeClosed className="size-4" />
-                            ) : (
-                              <Eye className="size-4" />
-                            )}
-                          </InputGroupButton>
-                        </InputGroupAddon>
-                      </InputGroup>
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-              </FieldGroup>
-            </form>
-          </CardContent>
-          <CardFooter className="flex-col gap-3">
-            <Button
-              type="submit"
-              className="w-full cursor-pointer"
-              form="form-register"
-            >
-              Regsiter
-            </Button>
-            <p className="text-sm text-muted-foreground">
-              Already have an account?{" "}
-              <Link href="/login" className="underline">
-                Login
-              </Link>
-            </p>
-          </CardFooter>
-        </Card>
-      </section>
-    </>
+                      <InputGroupAddon align="inline-end">
+                        <InputGroupButton
+                          aria-label="Show/Hide Password"
+                          title="Show/Hide Password"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeClosed className="size-4" />
+                          ) : (
+                            <Eye className="size-4" />
+                          )}
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="confirmPassword"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel>Confirm Password</FieldLabel>
+                    <InputGroup>
+                      <InputGroupInput
+                        {...field}
+                        type={showConfirmPassword ? "text" : "password"}
+                        id={field.name}
+                        aria-invalid={fieldState.invalid}
+                        autoComplete="off"
+                      />
+                      <InputGroupAddon align="inline-end">
+                        <InputGroupButton
+                          aria-label="Show/Hide Password"
+                          title="Show/Hide Password"
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                        >
+                          {showConfirmPassword ? (
+                            <EyeClosed className="size-4" />
+                          ) : (
+                            <Eye className="size-4" />
+                          )}
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+          </form>
+        </CardContent>
+        <CardFooter className="flex-col gap-3">
+          <Button
+            type="submit"
+            className="w-full cursor-pointer"
+            form="form-register"
+          >
+            Regsiter
+          </Button>
+          <p className="text-sm text-muted-foreground">
+            Already have an account?{" "}
+            <Link href="/login" className="underline">
+              Login
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
+    </section>
   );
 }
