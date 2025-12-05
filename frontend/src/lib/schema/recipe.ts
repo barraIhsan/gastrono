@@ -14,7 +14,7 @@ export const recipeSchema = z.object({
     .min(3, "Recipe Name must contain more than 3 characters")
     .max(64, "Recipe Name must not contain more than 64 characters"),
   description: z
-    .json()
+    .any()
     .refine(
       (content) => JSON.stringify(content).length >= 48,
       "Recipe Instructions must not be empty",
