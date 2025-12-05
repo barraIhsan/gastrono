@@ -15,7 +15,7 @@ export const recipeSchema = z.object({
     .max(64, "Recipe Name must not contain more than 64 characters"),
   description: z
     .string("Recipe Instructions must be a string")
-    .min(3, "Recipe Instructions must contain more than 3 characters"),
+    .min(48, "Recipe Instructions must not be empty"),
   image: z
     .any()
     .refine((files) => files instanceof FileList, "Recipe Image is required")

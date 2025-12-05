@@ -20,6 +20,8 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { toast } from "sonner";
 import Link from "next/link";
+import { generateHTML } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 
 export default function Detail({ id }: { id: string }) {
   const [recipe, setRecipe] = useState<z.infer<typeof recipeApiSchema>>();
@@ -30,7 +32,11 @@ export default function Detail({ id }: { id: string }) {
     const fetchRecipe = async () => {
       try {
         const res = await getRecipe(id);
-        setRecipe(res.data);
+        const html = generateHTML(JSON.parse(res.data.description), [
+          StarterKit,
+        ]);
+
+        setRecipe({ ...res.data, description: html });
       } catch (err: unknown) {
         if (axios.isAxiosError(err)) {
           if (err.response?.status === 404) {
@@ -67,14 +73,14 @@ export default function Detail({ id }: { id: string }) {
 
   return (
     <section className="pt-10">
-      <div className="flex justify-between mb-12">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-wrap gap-5 justify-between mb-12">
+        <div className="flex flex-wrap items-center gap-3">
           <ChevronLeft
             onClick={() => router.push("/")}
             size={32}
             className="cursor-pointer"
           />
-          <h1 className="text-2xl font-bold">{recipe.title}</h1>
+          <h1 className="text-2xl font-bold wrap-anywhere">{recipe.title}</h1>
         </div>
         <div className="flex gap-3">
           <Button
@@ -128,16 +134,19 @@ export default function Detail({ id }: { id: string }) {
           </Dialog>
         </div>
       </div>
-      <Image
-        src={process.env.NEXT_PUBLIC_API_URL + recipe.image_url}
-        width={400}
-        height={400}
-        alt={recipe.title}
-        className="size-100 object-cover float-right"
-      />
-      <article className="prose prose-neutral dark:prose-invert">
-        {recipe.description}
-      </article>
+      <div className="flex flex-col lg:flex-row gap-4">
+        <Image
+          src={process.env.NEXT_PUBLIC_API_URL + recipe.image_url}
+          width={288}
+          height={288}
+          alt={recipe.title}
+          className="w-full h-50 sm:size-50 2xl:size-72 object-cover shrink-0"
+        />
+        <article
+          className="prose prose-neutral dark:prose-invert max-w-none wrap-anywhere"
+          dangerouslySetInnerHTML={{ __html: recipe.description }}
+        />
+      </div>
     </section>
   );
 }

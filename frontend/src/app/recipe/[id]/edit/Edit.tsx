@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, X } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
 import { uploadImg } from "@/lib/api/upload";
 import { getRecipe, updateRecipe } from "@/lib/api/recipe";
 import axios from "axios";
@@ -29,6 +28,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import Tiptap from "@/components/TipTap";
 
 export default function Edit({ id }: { id: string }) {
   const [previewImg, setPreviewImg] = useState("");
@@ -231,14 +231,7 @@ export default function Edit({ id }: { id: string }) {
             render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel>Recipe Instructions</FieldLabel>
-                <Textarea
-                  {...field}
-                  rows={10}
-                  id={field.name}
-                  aria-invalid={fieldState.invalid}
-                  autoComplete="off"
-                  className="resize-y"
-                />
+                <Tiptap value={field.value} onChange={field.onChange} />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
@@ -278,7 +271,7 @@ export default function Edit({ id }: { id: string }) {
             <Button
               type="submit"
               className="cursor-pointer"
-              variant="destructive"
+              variant="default"
               onClick={handleProceed}
             >
               Proceed

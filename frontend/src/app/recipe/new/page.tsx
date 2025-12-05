@@ -14,12 +14,12 @@ import { Input } from "@/components/ui/input";
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, X } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
 import { uploadImg } from "@/lib/api/upload";
 import { createRecipe } from "@/lib/api/recipe";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Tiptap from "@/components/TipTap";
 
 export default function AddRecipe() {
   const [previewImg, setPreviewImg] = useState("");
@@ -170,14 +170,7 @@ export default function AddRecipe() {
             render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel>Recipe Instructions</FieldLabel>
-                <Textarea
-                  {...field}
-                  rows={10}
-                  id={field.name}
-                  aria-invalid={fieldState.invalid}
-                  autoComplete="off"
-                  className="resize-y"
-                />
+                <Tiptap value={field.value} onChange={field.onChange} />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
