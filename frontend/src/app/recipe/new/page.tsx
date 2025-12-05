@@ -42,7 +42,7 @@ export default function AddRecipe() {
     // create recipe
     const payload = {
       title: data.title,
-      description: data.description,
+      description: JSON.stringify(data.description),
       image_url: resImg.data.filePath,
     };
 

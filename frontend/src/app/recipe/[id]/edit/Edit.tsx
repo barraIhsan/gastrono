@@ -53,7 +53,7 @@ export default function Edit({ id }: { id: string }) {
         // auto-fill
         form.reset({
           title: res.data.title,
-          description: res.data.description,
+          description: JSON.parse(res.data.description),
         });
 
         // set preview img
@@ -91,7 +91,7 @@ export default function Edit({ id }: { id: string }) {
       // update recipe
       const payload = {
         title: data.title,
-        description: data.description,
+        description: JSON.stringify(data.description),
         image_url: imageUrl,
       };
 
@@ -231,7 +231,9 @@ export default function Edit({ id }: { id: string }) {
             render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel>Recipe Instructions</FieldLabel>
-                <Tiptap value={field.value} onChange={field.onChange} />
+                {field.value && (
+                  <Tiptap value={field.value} onChange={field.onChange} />
+                )}
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}

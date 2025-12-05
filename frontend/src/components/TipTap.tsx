@@ -1,19 +1,19 @@
 "use client";
 
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, JSONContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import ToolBar from "./ToolBar";
-import { useEffect } from "react";
 
 const Tiptap = ({
   value,
   onChange,
 }: {
   value: string | undefined;
-  onChange: (richtext: string) => void;
+  onChange: (richtext: JSONContent) => void;
 }) => {
   const editor = useEditor({
     extensions: [StarterKit],
+    content: value,
     immediatelyRender: false,
     editorProps: {
       attributes: {
@@ -23,16 +23,9 @@ const Tiptap = ({
       },
     },
     onUpdate({ editor }) {
-      onChange(JSON.stringify(editor.getJSON()));
+      onChange(editor.getJSON());
     },
   });
-
-  useEffect(() => {
-    if (!editor) return;
-    if (!value) return;
-
-    editor.commands.setContent(JSON.parse(value));
-  }, [value, editor]);
 
   return (
     <div className="flex flex-col gap-3">
