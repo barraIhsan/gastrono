@@ -92,7 +92,7 @@ export default function Register() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-xl">Register</CardTitle>
-          <CardDescription>Enter your credentials below</CardDescription>
+          <CardDescription>Create an account to get started</CardDescription>
         </CardHeader>
         <CardContent>
           <form id="form-register" onSubmit={form.handleSubmit(onSubmit)}>

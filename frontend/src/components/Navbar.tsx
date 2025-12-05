@@ -77,7 +77,7 @@ export default function Navbar() {
               </Button>
             ))}
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
             className="cursor-pointer"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}

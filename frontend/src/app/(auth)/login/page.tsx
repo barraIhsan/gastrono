@@ -93,7 +93,7 @@ export default function Login() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-xl">Login</CardTitle>
-          <CardDescription>Enter your credentials below</CardDescription>
+          <CardDescription>Login to your account</CardDescription>
         </CardHeader>
         <CardContent>
           <form id="form-login" onSubmit={form.handleSubmit(onSubmit)}>
