@@ -27,12 +27,24 @@ export default function Detail({ id }: { id: string }) {
 
   useEffect(() => {
     const fetchRecipe = async () => {
-      const res = await getRecipe(id);
-      setRecipe(res.data);
+      try {
+        const res = await getRecipe(id);
+        setRecipe(res.data);
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          if (err.response?.status === 404) {
+            toast.error("Recipe not found");
+            router.replace("/");
+          } else {
+            toast.error("An error occured");
+            router.replace("/");
+          }
+        }
+      }
     };
 
     fetchRecipe();
-  }, [id]);
+  }, [id, router]);
 
   const handleDelete = async () => {
     try {
