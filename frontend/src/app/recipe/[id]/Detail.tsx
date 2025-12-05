@@ -19,6 +19,7 @@ import { DialogClose } from "@radix-ui/react-dialog";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { toast } from "sonner";
+import Link from "next/link";
 
 export default function Detail({ id }: { id: string }) {
   const [recipe, setRecipe] = useState<z.infer<typeof recipeApiSchema>>();
@@ -75,11 +76,26 @@ export default function Detail({ id }: { id: string }) {
           />
           <h1 className="text-2xl font-bold">{recipe.title}</h1>
         </div>
-        <div className="flex gap-5">
-          <Pencil className="cursor-pointer" />
+        <div className="flex gap-3">
+          <Button
+            className="cursor-pointer"
+            variant="default"
+            size="icon-lg"
+            asChild
+          >
+            <Link href={`/recipe/${id}/edit`}>
+              <Pencil />
+            </Link>
+          </Button>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Trash2 className="cursor-pointer" />
+              <Button
+                className="cursor-pointer"
+                variant="default"
+                size="icon-lg"
+              >
+                <Trash2 />
+              </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -119,7 +135,9 @@ export default function Detail({ id }: { id: string }) {
         alt={recipe.title}
         className="size-100 object-cover float-right"
       />
-      <p>{recipe.description}</p>
+      <article className="prose prose-neutral dark:prose-invert">
+        {recipe.description}
+      </article>
     </section>
   );
 }

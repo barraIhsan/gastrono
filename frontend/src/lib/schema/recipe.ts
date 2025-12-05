@@ -29,6 +29,8 @@ export const recipeSchema = z.object({
     ),
 });
 
+export const updateRecipeSchema = recipeSchema.partial({ image: true });
+
 export const recipeApiSchema = recipeSchema.omit({ image: true }).extend({
   image_url: z.string(),
 });
