@@ -62,7 +62,7 @@ export default function Login() {
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 401) {
-          toast.error(err.response.data.message);
+          toast.error("Username or password is incorrect");
         } else {
           toast.error("An error occured");
         }
