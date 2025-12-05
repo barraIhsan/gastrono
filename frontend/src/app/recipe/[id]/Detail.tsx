@@ -72,7 +72,7 @@ export default function Detail({ id }: { id: string }) {
   if (!recipe) return null;
 
   return (
-    <section className="pt-10">
+    <section className="pt-10 pb-30">
       <div className="flex flex-wrap gap-5 justify-between mb-12">
         <div className="flex flex-wrap items-center gap-3">
           <ChevronLeft
@@ -134,13 +134,13 @@ export default function Detail({ id }: { id: string }) {
           </Dialog>
         </div>
       </div>
-      <div className="flex flex-col lg:flex-row gap-4">
+      <div className="flex flex-col lg:flex-row gap-12">
         <Image
           src={process.env.NEXT_PUBLIC_API_URL + recipe.image_url}
           width={288}
           height={288}
           alt={recipe.title}
-          className="w-full h-50 sm:size-50 2xl:size-72 object-cover shrink-0"
+          className="w-full h-50 sm:size-50 2xl:size-72 object-cover shrink-0 rounded-md"
         />
         <article
           className="prose prose-neutral dark:prose-invert max-w-none wrap-anywhere"

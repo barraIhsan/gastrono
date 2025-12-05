@@ -128,7 +128,7 @@ export default function Edit({ id }: { id: string }) {
   };
 
   return (
-    <section className="pt-10">
+    <section className="pt-10 pb-30">
       <div className="flex items-center gap-3 mb-12">
         <ChevronLeft
           onClick={() => router.push("/recipe/" + id)}
