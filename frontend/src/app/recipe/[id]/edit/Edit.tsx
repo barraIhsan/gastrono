@@ -29,6 +29,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import Tiptap from "@/components/TipTap";
+import Link from "next/link";
 
 export default function Edit({ id }: { id: string }) {
   const [previewImg, setPreviewImg] = useState("");
@@ -129,14 +130,10 @@ export default function Edit({ id }: { id: string }) {
 
   return (
     <section className="pt-10 pb-30">
-      <div className="flex items-center gap-3 mb-12">
-        <ChevronLeft
-          onClick={() => router.push("/recipe/" + id)}
-          size={32}
-          className="cursor-pointer"
-        />
+      <Link href={"/recipe/" + id} className="flex items-center gap-3 mb-12">
+        <ChevronLeft size={32} />
         <h1 className="text-2xl font-bold">Edit recipe</h1>
-      </div>
+      </Link>
       <form
         id="form-add-recipe"
         onSubmit={form.handleSubmit(onSubmit)}

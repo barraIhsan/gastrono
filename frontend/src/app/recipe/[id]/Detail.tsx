@@ -75,14 +75,10 @@ export default function Detail({ id }: { id: string }) {
   return (
     <section className="pt-10 pb-30">
       <div className="flex flex-wrap gap-5 justify-between mb-12">
-        <div className="flex flex-wrap items-center gap-3">
-          <ChevronLeft
-            onClick={() => router.push("/")}
-            size={32}
-            className="cursor-pointer"
-          />
+        <Link href="/" className="flex flex-wrap items-center gap-3">
+          <ChevronLeft size={32} />
           <p className="text-2xl font-bold">Recipe Details</p>
-        </div>
+        </Link>
         <div className="flex gap-3">
           <Button
             className="cursor-pointer"

@@ -20,6 +20,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Tiptap from "@/components/TipTap";
+import Link from "next/link";
 
 export default function AddRecipe() {
   const [previewImg, setPreviewImg] = useState("");
@@ -73,14 +74,10 @@ export default function AddRecipe() {
 
   return (
     <section className="pt-10 pb-30">
-      <div className="flex items-center gap-3 mb-12">
-        <ChevronLeft
-          onClick={() => router.push("/")}
-          size={32}
-          className="cursor-pointer"
-        />
+      <Link href="/" className="flex items-center gap-3 mb-12">
+        <ChevronLeft size={32} />
         <h1 className="text-2xl font-bold">Create new recipe</h1>
-      </div>
+      </Link>
       <form
         id="form-add-recipe"
         onSubmit={form.handleSubmit(onSubmit)}
