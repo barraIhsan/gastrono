@@ -271,7 +271,7 @@ export default function Edit({ id }: { id: string }) {
               {errDuration && (
                 <FieldError
                   errors={[{ message: errDuration }]}
-                  className="w-30!"
+                  className="sm:w-30!"
                 />
               )}
             </Field>
