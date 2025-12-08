@@ -8,5 +8,6 @@ export const recipeSchema = z
       .max(64, "Title must not contain more than 64 characters"),
     description: z.string("Description must not be empty"),
     image_url: z.string("Image must be set"),
+    total_minutes: z.number("Total Minutes must be a number"),
   })
   .strict();

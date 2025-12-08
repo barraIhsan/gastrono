@@ -68,6 +68,7 @@ CREATE TABLE `recipes` (
   `image_url` varchar(500) DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `user_id` char(36) NOT NULL,
+  `total_minutes` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `fk_recipe_user` (`user_id`),
   CONSTRAINT `fk_recipe_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE

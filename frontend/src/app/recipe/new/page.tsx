@@ -33,6 +33,10 @@ export default function AddRecipe() {
     },
   });
 
+  const errDuration =
+    form.formState.errors.hours?.message ??
+    form.formState.errors.minutes?.message;
+
   const onSubmit = async (data: z.infer<typeof recipeSchema>) => {
     // upload image
     const formData = new FormData();
@@ -43,6 +47,7 @@ export default function AddRecipe() {
     const payload = {
       title: data.title,
       description: JSON.stringify(data.description),
+      total_minutes: Number(data.hours) * 60 + Number(data.minutes),
       image_url: resImg.data.filePath,
     };
 
@@ -144,24 +149,73 @@ export default function AddRecipe() {
           />
         </FieldGroup>
         <FieldGroup>
-          <Controller
-            name="title"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field>
-                <FieldLabel>Recipe Name</FieldLabel>
-                <Input
-                  {...field}
-                  id={field.name}
-                  aria-invalid={fieldState.invalid}
-                  autoComplete="off"
+          <div className="flex flex-col sm:flex-row gap-5">
+            <Controller
+              name="title"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field>
+                  <FieldLabel>Recipe Name</FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    autoComplete="off"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Field className="w-fit">
+              <FieldLabel>Duration</FieldLabel>
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-1">
+                  <Controller
+                    name="hours"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Input
+                        {...field}
+                        id={field.name}
+                        aria-invalid={fieldState.invalid}
+                        autoComplete="off"
+                        className="w-11"
+                        placeholder="01"
+                        maxLength={2}
+                      />
+                    )}
+                  />
+                  <p>h</p>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Controller
+                    name="minutes"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Input
+                        {...field}
+                        id={field.name}
+                        aria-invalid={fieldState.invalid}
+                        autoComplete="off"
+                        className="w-11"
+                        placeholder="30"
+                        maxLength={2}
+                      />
+                    )}
+                  />
+                  <p>m</p>
+                </div>
+              </div>
+              {errDuration && (
+                <FieldError
+                  errors={[{ message: errDuration }]}
+                  className="w-30!"
                 />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
+              )}
+            </Field>
+          </div>
         </FieldGroup>
         <FieldGroup>
           <Controller

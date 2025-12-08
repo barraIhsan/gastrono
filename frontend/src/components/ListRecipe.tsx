@@ -3,10 +3,13 @@ import { useEffect, useState } from "react";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Clock } from "lucide-react";
+import { fmtTotalMin } from "@/lib/utils";
 
 type Recipe = {
   id: string;
   title: string;
+  total_minutes: number;
   image_url: string;
   created_at: string;
 };
@@ -44,11 +47,19 @@ export default function ListRecipe() {
             <CardHeader>
               <CardTitle className="inline-flex justify-between items-center">
                 {recipe.title}
-                <p className="font-normal text-muted-foreground text-sm">
-                  {new Date(recipe.created_at).toLocaleDateString("en-GB")}
+                <p className="font-normal text-muted-foreground text-sm inline-flex items-center gap-1">
+                  <Clock size={16} />
+                  {fmtTotalMin(recipe.total_minutes)}
                 </p>
               </CardTitle>
-              <CardDescription></CardDescription>
+              <CardDescription>
+                <p className="font-normal text-muted-foreground text-sm">
+                  {new Intl.DateTimeFormat("en-GB", {
+                    dateStyle: "full",
+                    timeStyle: "short",
+                  }).format(new Date(recipe.created_at))}
+                </p>
+              </CardDescription>
             </CardHeader>
           </Card>
         ))}

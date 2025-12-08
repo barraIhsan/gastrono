@@ -6,7 +6,7 @@ import validate from "../validation/validate.js";
 
 export const getAllRecipe = async (req) => {
   const [rows] = await pool.query(
-    "SELECT id,title,image_url,created_at FROM recipes WHERE user_id=? ORDER BY created_at DESC",
+    "SELECT id,title,total_minutes,image_url,created_at FROM recipes WHERE user_id=? ORDER BY created_at DESC",
     [req.user.id],
   );
 
@@ -15,7 +15,7 @@ export const getAllRecipe = async (req) => {
 
 export const getRecipeById = async (req) => {
   const [rows] = await pool.query(
-    "SELECT id,title,description,image_url,created_at FROM recipes WHERE id = ? AND user_id=?",
+    "SELECT id,title,description,total_minutes,image_url,created_at FROM recipes WHERE id = ? AND user_id=?",
     [req.params.id, req.user.id],
   );
 
@@ -28,13 +28,13 @@ export const getRecipeById = async (req) => {
 
 export const createRecipe = async (req) => {
   const validated = validate(recipeSchema, req.body);
-  const { title, description, image_url } = validated;
+  const { title, description, total_minutes, image_url } = validated;
 
   const uuid = uuidv4();
   await pool.query(
-    `INSERT INTO recipes (id,title,description,image_url,user_id)
-        VALUES (?,?,?,?,?)`,
-    [uuid, title, description, image_url, req.user.id],
+    `INSERT INTO recipes (id,title,description,total_minutes,image_url,user_id)
+        VALUES (?,?,?,?,?,?)`,
+    [uuid, title, description, total_minutes, image_url, req.user.id],
   );
 
   return {
@@ -44,11 +44,11 @@ export const createRecipe = async (req) => {
 
 export const updateRecipeById = async (req) => {
   const validated = validate(recipeSchema, req.body);
-  const { title, description, image_url } = validated;
+  const { title, description, total_minutes, image_url } = validated;
 
   const [rows] = await pool.query(
-    "UPDATE recipes SET title=?, description=?, image_url=? WHERE id=? AND user_id=?",
-    [title, description, image_url, req.params.id, req.user.id],
+    "UPDATE recipes SET title=?, description=?, total_minutes=?, image_url=? WHERE id=? AND user_id=?",
+    [title, description, total_minutes, image_url, req.params.id, req.user.id],
   );
 
   if (rows.affectedRows === 0) {

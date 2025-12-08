@@ -3,7 +3,7 @@ import { deleteRecipe, getRecipe } from "@/lib/api/recipe";
 import { useEffect, useState } from "react";
 import { recipeApiSchema } from "@/lib/schema/recipe";
 import z from "zod";
-import { ChevronLeft, Pencil, Trash2 } from "lucide-react";
+import { ChevronLeft, Clock, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { generateHTML } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { fmtTotalMin } from "@/lib/utils";
 
 export default function Detail({ id }: { id: string }) {
   const [recipe, setRecipe] = useState<z.infer<typeof recipeApiSchema>>();
@@ -80,7 +81,7 @@ export default function Detail({ id }: { id: string }) {
             size={32}
             className="cursor-pointer"
           />
-          <h1 className="text-2xl font-bold wrap-anywhere">{recipe.title}</h1>
+          <p className="text-2xl font-bold">Recipe Details</p>
         </div>
         <div className="flex gap-3">
           <Button
@@ -142,10 +143,19 @@ export default function Detail({ id }: { id: string }) {
           alt={recipe.title}
           className="w-full h-50 sm:size-50 2xl:size-72 object-cover shrink-0 rounded-md"
         />
-        <article
-          className="prose prose-neutral dark:prose-invert max-w-none wrap-anywhere"
-          dangerouslySetInnerHTML={{ __html: recipe.description }}
-        />
+        <div>
+          <h1 className="text-3xl font-bold wrap-anywhere mb-1">
+            {recipe.title}
+          </h1>
+          <p className="font-normal text-muted-foreground inline-flex items-center gap-1 mb-5">
+            <Clock size={16} />
+            {fmtTotalMin(recipe.total_minutes)}
+          </p>
+          <article
+            className="prose prose-neutral dark:prose-invert max-w-none wrap-anywhere"
+            dangerouslySetInnerHTML={{ __html: recipe.description }}
+          />
+        </div>
       </div>
     </section>
   );
