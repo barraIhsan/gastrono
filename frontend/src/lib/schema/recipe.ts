@@ -50,6 +50,7 @@ export const updateRecipeSchema = recipeSchema.partial({ image: true });
 export const recipeApiSchema = recipeSchema
   .omit({ image: true, hours: true, minutes: true })
   .extend({
+    created_at: z.string(),
     image_url: z.string(),
     total_minutes: z.number(),
   });

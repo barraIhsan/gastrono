@@ -22,7 +22,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { generateHTML } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { fmtTotalMin } from "@/lib/utils";
+import { fmtTimestamp, fmtTotalMin } from "@/lib/utils";
 
 export default function Detail({ id }: { id: string }) {
   const [recipe, setRecipe] = useState<z.infer<typeof recipeApiSchema>>();
@@ -151,6 +151,9 @@ export default function Detail({ id }: { id: string }) {
             className="prose prose-neutral dark:prose-invert max-w-none wrap-anywhere"
             dangerouslySetInnerHTML={{ __html: recipe.description }}
           />
+          <p className="italic text-sm text-muted-foreground mt-12">
+            Created at {fmtTimestamp(recipe.created_at)}
+          </p>
         </div>
       </div>
     </section>
