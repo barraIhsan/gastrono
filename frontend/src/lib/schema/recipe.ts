@@ -45,7 +45,12 @@ export const recipeSchema = z
     path: ["minutes"],
   });
 
-export const updateRecipeSchema = recipeSchema.partial({ image: true });
+export const updateRecipeSchema = recipeSchema
+  .partial({ image: true })
+  .refine((data) => data.hours > 0 || data.minutes > 0, {
+    message: "Enter at least 1 minute of duration",
+    path: ["minutes"],
+  });
 
 export const recipeApiSchema = recipeSchema
   .omit({ image: true, hours: true, minutes: true })
