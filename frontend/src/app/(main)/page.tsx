@@ -31,7 +31,6 @@ export default function Main() {
         </section>
         <Separator className="mt-20 mb-10" />
         <ListRecipe />
-        <div className="h-500"></div>
       </>
     );
   }
