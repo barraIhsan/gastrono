@@ -62,8 +62,6 @@ Make sure you already created a MariaDB/MySQL database. I'll assume you're using
 
 After importing, the database will contain all required tables.
 
----
-
 ## Usage
 
 1. Visit the frontend in your browser:
@@ -79,8 +77,6 @@ After importing, the database will contain all required tables.
    - Upload recipe images
    - Edit and delete recipes
    - View your recipe collection
-
----
 
 ## License
 
