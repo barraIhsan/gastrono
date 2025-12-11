@@ -5,10 +5,21 @@ import { recipeSchema } from "../validation/recipeValidation.js";
 import validate from "../validation/validate.js";
 
 export const getAllRecipe = async (req) => {
-  const [rows] = await pool.query(
-    "SELECT id,title,total_minutes,image_url,created_at FROM recipes WHERE user_id=? ORDER BY created_at DESC",
-    [req.user.id],
-  );
+  const { q } = req.query;
+  const params = [req.user.id];
+
+  let sql = `
+    SELECT id,title,total_minutes,image_url,created_at FROM recipes WHERE user_id=?
+  `;
+
+  if (q) {
+    sql += ` AND title LIKE ?`;
+    params.push(`%${q}%`);
+  }
+
+  sql += ` ORDER BY created_at DESC`;
+
+  const [rows] = await pool.query(sql, params);
 
   return rows;
 };
