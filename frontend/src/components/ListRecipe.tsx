@@ -65,40 +65,48 @@ export default function ListRecipe() {
           </InputGroupAddon>
         </InputGroup>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5">
-        {recipes.map((recipe) => (
-          <Card
-            key={recipe.id}
-            className="pt-0 overflow-hidden cursor-pointer"
-            onClick={() => router.push("/recipe/" + recipe.id)}
-          >
-            <Image
-              src={process.env.NEXT_PUBLIC_API_URL + recipe.image_url}
-              alt={recipe.title}
-              width={359}
-              height={200}
-              className="object-cover h-50 w-full"
-            />
-            <CardHeader>
-              <CardTitle className="inline-flex justify-between items-center">
-                {recipe.title}
-                <p className="font-normal text-muted-foreground text-sm inline-flex items-center gap-1">
-                  <Clock size={16} />
-                  {fmtTotalMin(recipe.total_minutes)}
-                </p>
-              </CardTitle>
-              <CardDescription>
-                <p className="font-normal text-muted-foreground text-sm">
-                  {new Intl.DateTimeFormat("en-GB", {
-                    dateStyle: "full",
-                    timeStyle: "short",
-                  }).format(new Date(recipe.created_at))}
-                </p>
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        ))}
-      </div>
+      {recipes.length < 1 ? (
+        <p className="text-center text-muted-foreground mt-24">
+          {debouncedSearchValue
+            ? "No recipes match your search"
+            : "You haven't created any recipes yet"}
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5">
+          {recipes.map((recipe) => (
+            <Card
+              key={recipe.id}
+              className="pt-0 overflow-hidden cursor-pointer"
+              onClick={() => router.push("/recipe/" + recipe.id)}
+            >
+              <Image
+                src={process.env.NEXT_PUBLIC_API_URL + recipe.image_url}
+                alt={recipe.title}
+                width={359}
+                height={200}
+                className="object-cover h-50 w-full"
+              />
+              <CardHeader>
+                <CardTitle className="inline-flex justify-between items-center">
+                  {recipe.title}
+                  <p className="font-normal text-muted-foreground text-sm inline-flex items-center gap-1">
+                    <Clock size={16} />
+                    {fmtTotalMin(recipe.total_minutes)}
+                  </p>
+                </CardTitle>
+                <CardDescription>
+                  <p className="font-normal text-muted-foreground text-sm">
+                    {new Intl.DateTimeFormat("en-GB", {
+                      dateStyle: "full",
+                      timeStyle: "short",
+                    }).format(new Date(recipe.created_at))}
+                  </p>
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
