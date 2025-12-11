@@ -69,7 +69,7 @@ After importing, the database will contain all required tables.
 1. Visit the frontend in your browser:
 
    ```
-   http://localhost:3000
+   http://localhost:3001
    ```
 
 2. Register an account and log into it
