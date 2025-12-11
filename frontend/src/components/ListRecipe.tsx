@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Clock, Search } from "lucide-react";
-import { fmtTotalMin } from "@/lib/utils";
+import { Clock, Search, X } from "lucide-react";
+import { cn, fmtTotalMin } from "@/lib/utils";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
 type Recipe = {
   id: string;
@@ -19,6 +21,7 @@ export default function ListRecipe() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>("");
+  const [mobileSearchOpen, setMobileSearchOpen] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -50,11 +53,22 @@ export default function ListRecipe() {
     setSearchValue(e.target.value);
   };
 
+  const handleMobileSearchOpen = () => {
+    setMobileSearchOpen(!mobileSearchOpen);
+  };
+
   return (
     <section>
       <div className="flex gap-5 justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Your Recipes</h1>
-        <InputGroup className="max-w-72">
+        <h1
+          className={cn(
+            "text-3xl font-bold",
+            mobileSearchOpen && "hidden sm:block",
+          )}
+        >
+          Your Recipes
+        </h1>
+        <InputGroup className="max-w-72 hidden sm:flex">
           <InputGroupInput
             placeholder="Search..."
             value={searchValue}
@@ -64,6 +78,22 @@ export default function ListRecipe() {
             <Search />
           </InputGroupAddon>
         </InputGroup>
+        {mobileSearchOpen && (
+          <Input
+            className="flex sm:hidden"
+            placeholder="Search..."
+            value={searchValue}
+            onChange={handleSearchChange}
+          />
+        )}
+        <Button
+          variant="outline"
+          size="icon"
+          className="flex sm:hidden cursor-pointer"
+          onClick={handleMobileSearchOpen}
+        >
+          {mobileSearchOpen ? <X /> : <Search />}
+        </Button>
       </div>
       {recipes.length < 1 ? (
         <p className="text-center text-muted-foreground mt-24">
